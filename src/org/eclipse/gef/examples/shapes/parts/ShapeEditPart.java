@@ -33,6 +33,7 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
+import org.eclipse.gef.examples.shapes.figures.TriangleAnchor;
 import org.eclipse.gef.examples.shapes.model.Connection;
 import org.eclipse.gef.examples.shapes.model.EllipticalShape;
 import org.eclipse.gef.examples.shapes.model.ModelElement;
@@ -215,7 +216,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 			else if (getModel() instanceof RectangularShape)
 				anchor = new ChopboxAnchor(getFigure());
 			else if (getModel() instanceof TriangularShape)
-				anchor = new ChopboxAnchor(getFigure());
+				anchor = new TriangleAnchor(getFigure());
 			else
 				// if Shapes gets extended the conditions above must be updated
 				throw new IllegalArgumentException("unexpected model");
@@ -327,6 +328,10 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 				getCastedModel().getSize());
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this,
 				getFigure(), bounds);
+		if(getFigure() instanceof Triangle){//三角形特别设定，暂时放在这
+			Triangle tri = (Triangle)getFigure();
+
+		}
 		getFigure().setBackgroundColor(((Shape)getModel()).getColor());
 	}
 }
