@@ -332,6 +332,10 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 			Triangle tri = (Triangle)getFigure();
 
 		}
-		getFigure().setBackgroundColor(((Shape)getModel()).getColor());
+		if (((Shape) getModel()).getColor() == 0) {
+			getFigure().setBackgroundColor(ColorConstants.red);
+		} else {
+			getFigure().setBackgroundColor(ColorConstants.green);
+		}
 	}
 }

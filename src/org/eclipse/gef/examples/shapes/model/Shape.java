@@ -15,13 +15,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.examples.shapes.ShapesPlugin;
@@ -148,14 +146,14 @@ public abstract class Shape extends ModelElement {
 		if (conn.getSource() == this) {
 			if(sourceConnections.isEmpty())//第一次被连接
 			{
-				setColor(ColorConstants.green);
+				setColor(1);
 			}
 			sourceConnections.add(conn);
 			firePropertyChange(SOURCE_CONNECTIONS_PROP, null, conn);
 		} else if (conn.getTarget() == this) {
 			if(targetConnections.isEmpty())//第一次被连接
 			{
-				setColor(ColorConstants.green);
+				setColor(1);
 			}
 			targetConnections.add(conn);
 			firePropertyChange(TARGET_CONNECTIONS_PROP, null, conn);
@@ -261,14 +259,14 @@ public abstract class Shape extends ModelElement {
 			sourceConnections.remove(conn);
 			if(sourceConnections.isEmpty())//最后一个连接被删除
 			{
-				setColor(ColorConstants.red);
+				setColor(0);
 			}
 			firePropertyChange(SOURCE_CONNECTIONS_PROP, null, conn);
 		} else if (conn.getTarget() == this) {
 			targetConnections.remove(conn);
 			if(targetConnections.isEmpty())//最后一个连接被删除
 			{
-				setColor(ColorConstants.red);
+				setColor(0);
 			}
 			firePropertyChange(TARGET_CONNECTIONS_PROP, null, conn);
 		}
@@ -333,13 +331,13 @@ public abstract class Shape extends ModelElement {
 		}
 	}
 	
-	private Color color = ColorConstants.red;
+	private int color;
 
-	public Color getColor() {
+	public int getColor() {
 		return color;
 	}
 
-	public void setColor(Color color) {
+	public void setColor(int color) {
 		if (color == this.color)
 			return;
 		this.color = color;
