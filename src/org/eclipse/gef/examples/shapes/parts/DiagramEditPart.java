@@ -22,7 +22,6 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.LayerConstants;
@@ -32,12 +31,12 @@ import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
-
 import org.eclipse.gef.examples.shapes.model.EllipticalShape;
 import org.eclipse.gef.examples.shapes.model.ModelElement;
 import org.eclipse.gef.examples.shapes.model.RectangularShape;
 import org.eclipse.gef.examples.shapes.model.Shape;
 import org.eclipse.gef.examples.shapes.model.ShapesDiagram;
+import org.eclipse.gef.examples.shapes.model.TriangularShape;
 import org.eclipse.gef.examples.shapes.model.commands.ShapeCreateCommand;
 import org.eclipse.gef.examples.shapes.model.commands.ShapeSetConstraintCommand;
 
@@ -191,7 +190,8 @@ class DiagramEditPart extends AbstractGraphicalEditPart implements
 		protected Command getCreateCommand(CreateRequest request) {
 			Object childClass = request.getNewObjectType();
 			if (childClass == EllipticalShape.class
-					|| childClass == RectangularShape.class) {
+					|| childClass == RectangularShape.class
+					|| childClass == TriangularShape.class) {
 				// return a command that can add a Shape to a ShapesDiagram
 				return new ShapeCreateCommand((Shape) request.getNewObject(),
 						(ShapesDiagram) getHost().getModel(),

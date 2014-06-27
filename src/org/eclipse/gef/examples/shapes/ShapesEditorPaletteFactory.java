@@ -11,7 +11,6 @@
 package org.eclipse.gef.examples.shapes;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-
 import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
 import org.eclipse.gef.palette.ConnectionCreationToolEntry;
 import org.eclipse.gef.palette.MarqueeToolEntry;
@@ -23,10 +22,10 @@ import org.eclipse.gef.palette.PanningSelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.requests.SimpleFactory;
-
 import org.eclipse.gef.examples.shapes.model.Connection;
 import org.eclipse.gef.examples.shapes.model.EllipticalShape;
 import org.eclipse.gef.examples.shapes.model.RectangularShape;
+import org.eclipse.gef.examples.shapes.model.TriangularShape;
 
 /**
  * Utility class that can create a GEF Palette.
@@ -55,6 +54,15 @@ final class ShapesEditorPaletteFactory {
 						"icons/rectangle16.gif"),
 				ImageDescriptor.createFromFile(ShapesPlugin.class,
 						"icons/rectangle24.gif"));
+		componentsDrawer.add(component);
+		
+		component = new CombinedTemplateCreationEntry("Triangle",
+				"Create a triangular shape", TriangularShape.class,
+				new SimpleFactory(TriangularShape.class),
+				ImageDescriptor.createFromFile(ShapesPlugin.class,
+						"icons/triangle16.gif"),
+				ImageDescriptor.createFromFile(ShapesPlugin.class,
+						"icons/triangle24.gif"));
 		componentsDrawer.add(component);
 
 		return componentsDrawer;
