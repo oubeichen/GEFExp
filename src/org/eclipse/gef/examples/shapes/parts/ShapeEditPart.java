@@ -164,7 +164,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 	protected IFigure createFigure() {
 		IFigure f = createFigureForModel();
 		f.setOpaque(true); // non-transparent figure
-		f.setBackgroundColor(ColorConstants.green);
+		f.setBackgroundColor(ColorConstants.red);
 		return f;
 	}
 

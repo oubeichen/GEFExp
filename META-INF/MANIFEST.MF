@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
-Bundle-SymbolicName: org.eclipse.gef.examples.shapes; singleton:=true
+Bundle-SymbolicName: gefExp;singleton:=true
 Bundle-Version: 3.8.0.qualifier
 Bundle-Activator: org.eclipse.gef.examples.shapes.ShapesPlugin
 Bundle-Vendor: %Plugin.providerName
