@@ -306,7 +306,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String prop = evt.getPropertyName();
-		if (Shape.SIZE_PROP.equals(prop) || Shape.LOCATION_PROP.equals(prop)) {
+		if (Shape.SIZE_PROP.equals(prop) || Shape.LOCATION_PROP.equals(prop) || Shape.COLOR_PROP.equals(prop)) {
 			refreshVisuals();
 		} else if (Shape.SOURCE_CONNECTIONS_PROP.equals(prop)) {
 			refreshSourceConnections();
@@ -327,5 +327,6 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 				getCastedModel().getSize());
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this,
 				getFigure(), bounds);
+		getFigure().setBackgroundColor(((Shape)getModel()).getColor());
 	}
 }
