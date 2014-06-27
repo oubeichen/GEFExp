@@ -98,6 +98,7 @@ public class Connection extends ModelElement {
 	 * 
 	 * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
 	 */
+	@Override
 	public IPropertyDescriptor[] getPropertyDescriptors() {
 		return descriptors;
 	}
@@ -107,6 +108,7 @@ public class Connection extends ModelElement {
 	 * 
 	 * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
 	 */
+	@Override
 	public Object getPropertyValue(Object id) {
 		if (id.equals(LINESTYLE_PROP)) {
 			if (getLineStyle() == Graphics.LINE_DASH)
@@ -195,6 +197,7 @@ public class Connection extends ModelElement {
 	 * @see org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.lang.Object,
 	 *      java.lang.Object)
 	 */
+	@Override
 	public void setPropertyValue(Object id, Object value) {
 		if (id.equals(LINESTYLE_PROP))
 			setLineStyle(new Integer(1).equals(value) ? Graphics.LINE_DASH

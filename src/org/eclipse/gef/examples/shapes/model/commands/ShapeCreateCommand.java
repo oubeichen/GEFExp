@@ -60,6 +60,7 @@ public class ShapeCreateCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#canExecute()
 	 */
+	@Override
 	public boolean canExecute() {
 		return newShape != null && parent != null && bounds != null;
 	}
@@ -69,6 +70,7 @@ public class ShapeCreateCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#execute()
 	 */
+	@Override
 	public void execute() {
 		newShape.setLocation(bounds.getLocation());
 		Dimension size = bounds.getSize();
@@ -82,6 +84,7 @@ public class ShapeCreateCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#redo()
 	 */
+	@Override
 	public void redo() {
 		parent.addChild(newShape);
 	}
@@ -91,6 +94,7 @@ public class ShapeCreateCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#undo()
 	 */
+	@Override
 	public void undo() {
 		parent.removeChild(newShape);
 	}

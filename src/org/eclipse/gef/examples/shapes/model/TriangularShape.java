@@ -14,10 +14,12 @@ public class TriangularShape extends Shape {
 
 	private static final long serialVersionUID = 1;
 
+	@Override
 	public Image getIcon() {
 		return TRIANGLE_ICON;
 	}
 
+	@Override
 	public String toString() {
 		return "Triangle " + hashCode();
 	}

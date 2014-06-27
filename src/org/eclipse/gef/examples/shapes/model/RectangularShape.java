@@ -23,10 +23,12 @@ public class RectangularShape extends Shape {
 
 	private static final long serialVersionUID = 1;
 
+	@Override
 	public Image getIcon() {
 		return RECTANGLE_ICON;
 	}
 
+	@Override
 	public String toString() {
 		return "Rectangle " + hashCode();
 	}

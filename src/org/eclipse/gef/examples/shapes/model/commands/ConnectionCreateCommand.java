@@ -75,6 +75,7 @@ public class ConnectionCreateCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#canExecute()
 	 */
+	@Override
 	public boolean canExecute() {
 		// disallow source -> source connections
 		if (source.equals(target)) {
@@ -96,6 +97,7 @@ public class ConnectionCreateCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#execute()
 	 */
+	@Override
 	public void execute() {
 		// create a new connection between source and target
 		connection = new Connection(source, target);
@@ -108,6 +110,7 @@ public class ConnectionCreateCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#redo()
 	 */
+	@Override
 	public void redo() {
 		connection.reconnect();
 	}
@@ -132,6 +135,7 @@ public class ConnectionCreateCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#undo()
 	 */
+	@Override
 	public void undo() {
 		connection.disconnect();
 	}

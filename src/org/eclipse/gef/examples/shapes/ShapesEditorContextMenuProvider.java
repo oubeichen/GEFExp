@@ -55,6 +55,7 @@ class ShapesEditorContextMenuProvider extends ContextMenuProvider {
 	 * 
 	 * @see org.eclipse.gef.ContextMenuProvider#buildContextMenu(org.eclipse.jface.action.IMenuManager)
 	 */
+	@Override
 	public void buildContextMenu(IMenuManager menu) {
 		// Add standard action groups to the menu
 		GEFActionConstants.addStandardActionGroups(menu);

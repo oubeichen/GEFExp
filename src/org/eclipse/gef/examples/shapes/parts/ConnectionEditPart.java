@@ -44,6 +44,7 @@ class ConnectionEditPart extends AbstractConnectionEditPart implements
 	 * Upon activation, attach to the model element as a property change
 	 * listener.
 	 */
+	@Override
 	public void activate() {
 		if (!isActive()) {
 			super.activate();
@@ -56,6 +57,7 @@ class ConnectionEditPart extends AbstractConnectionEditPart implements
 	 * 
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
 	 */
+	@Override
 	protected void createEditPolicies() {
 		// Selection handle edit policy.
 		// Makes the connection show a feedback, when selected by the user.
@@ -64,6 +66,7 @@ class ConnectionEditPart extends AbstractConnectionEditPart implements
 		// Allows the removal of the connection model element
 		installEditPolicy(EditPolicy.CONNECTION_ROLE,
 				new ConnectionEditPolicy() {
+					@Override
 					protected Command getDeleteCommand(GroupRequest request) {
 						return new ConnectionDeleteCommand(getCastedModel());
 					}
@@ -75,6 +78,7 @@ class ConnectionEditPart extends AbstractConnectionEditPart implements
 	 * 
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
 	 */
+	@Override
 	protected IFigure createFigure() {
 		PolylineConnection connection = (PolylineConnection) super
 				.createFigure();
@@ -91,6 +95,7 @@ class ConnectionEditPart extends AbstractConnectionEditPart implements
 	 * Upon deactivation, detach from the model element as a property change
 	 * listener.
 	 */
+	@Override
 	public void deactivate() {
 		if (isActive()) {
 			super.deactivate();
@@ -108,6 +113,7 @@ class ConnectionEditPart extends AbstractConnectionEditPart implements
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.
 	 * PropertyChangeEvent)
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		String property = event.getPropertyName();
 		if (Connection.LINESTYLE_PROP.equals(property)) {

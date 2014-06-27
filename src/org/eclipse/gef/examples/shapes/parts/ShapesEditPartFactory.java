@@ -31,6 +31,7 @@ public class ShapesEditPartFactory implements EditPartFactory {
 	 * org.eclipse.gef.EditPartFactory#createEditPart(org.eclipse.gef.EditPart,
 	 * java.lang.Object)
 	 */
+	@Override
 	public EditPart createEditPart(EditPart context, Object modelElement) {
 		// get EditPart for model element
 		EditPart part = getPartForElement(modelElement);

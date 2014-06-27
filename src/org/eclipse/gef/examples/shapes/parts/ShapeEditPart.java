@@ -61,6 +61,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 	 * Upon activation, attach to the model element as a property change
 	 * listener.
 	 */
+	@Override
 	public void activate() {
 		if (!isActive()) {
 			super.activate();
@@ -73,6 +74,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 	 * 
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
 	 */
+	@Override
 	protected void createEditPolicies() {
 		// allow removal of the associated model element
 		installEditPolicy(EditPolicy.COMPONENT_ROLE,
@@ -89,6 +91,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 					 * getConnectionCompleteCommand
 					 * (org.eclipse.gef.requests.CreateConnectionRequest)
 					 */
+					@Override
 					protected Command getConnectionCompleteCommand(
 							CreateConnectionRequest request) {
 						ConnectionCreateCommand cmd = (ConnectionCreateCommand) request
@@ -105,6 +108,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 					 * getConnectionCreateCommand
 					 * (org.eclipse.gef.requests.CreateConnectionRequest)
 					 */
+					@Override
 					protected Command getConnectionCreateCommand(
 							CreateConnectionRequest request) {
 						Shape source = (Shape) getHost().getModel();
@@ -124,6 +128,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 					 * getReconnectSourceCommand
 					 * (org.eclipse.gef.requests.ReconnectRequest)
 					 */
+					@Override
 					protected Command getReconnectSourceCommand(
 							ReconnectRequest request) {
 						Connection conn = (Connection) request
@@ -143,6 +148,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 					 * getReconnectTargetCommand
 					 * (org.eclipse.gef.requests.ReconnectRequest)
 					 */
+					@Override
 					protected Command getReconnectTargetCommand(
 							ReconnectRequest request) {
 						Connection conn = (Connection) request
@@ -161,6 +167,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 	 * 
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
 	 */
+	@Override
 	protected IFigure createFigure() {
 		IFigure f = createFigureForModel();
 		f.setOpaque(true); // non-transparent figure
@@ -189,6 +196,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 	 * Upon deactivation, detach from the model element as a property change
 	 * listener.
 	 */
+	@Override
 	public void deactivate() {
 		if (isActive()) {
 			super.deactivate();
@@ -222,6 +230,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 	 * org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelSourceConnections
 	 * ()
 	 */
+	@Override
 	protected List getModelSourceConnections() {
 		return getCastedModel().getSourceConnections();
 	}
@@ -233,6 +242,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 	 * org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelTargetConnections
 	 * ()
 	 */
+	@Override
 	protected List getModelTargetConnections() {
 		return getCastedModel().getTargetConnections();
 	}
@@ -244,6 +254,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 	 * org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(org.eclipse.gef
 	 * .ConnectionEditPart)
 	 */
+	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(
 			ConnectionEditPart connection) {
 		return getConnectionAnchor();
@@ -256,6 +267,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 	 * org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(org.eclipse.gef
 	 * .Request)
 	 */
+	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
 		return getConnectionAnchor();
 	}
@@ -267,6 +279,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 	 * org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(org.eclipse.gef
 	 * .ConnectionEditPart)
 	 */
+	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(
 			ConnectionEditPart connection) {
 		return getConnectionAnchor();
@@ -279,6 +292,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 	 * org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(org.eclipse.gef
 	 * .Request)
 	 */
+	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
 		return getConnectionAnchor();
 	}
@@ -289,6 +303,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.
 	 * PropertyChangeEvent)
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String prop = evt.getPropertyName();
 		if (Shape.SIZE_PROP.equals(prop) || Shape.LOCATION_PROP.equals(prop)) {
@@ -300,6 +315,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 		}
 	}
 
+	@Override
 	protected void refreshVisuals() {
 		// notify parent container of changed position & location
 		// if this line is removed, the XYLayoutManager used by the parent

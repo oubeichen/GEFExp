@@ -46,6 +46,7 @@ public class ConnectionDeleteCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#execute()
 	 */
+	@Override
 	public void execute() {
 		connection.disconnect();
 	}
@@ -55,6 +56,7 @@ public class ConnectionDeleteCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#undo()
 	 */
+	@Override
 	public void undo() {
 		connection.reconnect();
 	}

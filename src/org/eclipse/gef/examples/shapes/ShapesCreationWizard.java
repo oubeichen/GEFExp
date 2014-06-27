@@ -46,6 +46,7 @@ public class ShapesCreationWizard extends Wizard implements INewWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#addPages()
 	 */
+	@Override
 	public void addPages() {
 		// add pages to this wizard
 		addPage(page1);
@@ -57,6 +58,7 @@ public class ShapesCreationWizard extends Wizard implements INewWizard {
 	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
 	 * org.eclipse.jface.viewers.IStructuredSelection)
 	 */
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		// create pages for this wizard
 		page1 = new CreationPage(workbench, selection);
@@ -67,6 +69,7 @@ public class ShapesCreationWizard extends Wizard implements INewWizard {
 	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#performFinish()
 	 */
+	@Override
 	public boolean performFinish() {
 		return page1.finish();
 	}
@@ -101,6 +104,7 @@ public class ShapesCreationWizard extends Wizard implements INewWizard {
 		 * org.eclipse.ui.dialogs.WizardNewFileCreationPage#createControl(org
 		 * .eclipse.swt.widgets.Composite)
 		 */
+		@Override
 		public void createControl(Composite parent) {
 			super.createControl(parent);
 			setFileName("shapesExample" + fileCount + DEFAULT_EXTENSION);
@@ -142,6 +146,7 @@ public class ShapesCreationWizard extends Wizard implements INewWizard {
 		 * @see
 		 * org.eclipse.ui.dialogs.WizardNewFileCreationPage#getInitialContents()
 		 */
+		@Override
 		protected InputStream getInitialContents() {
 			ByteArrayInputStream bais = null;
 			try {
@@ -176,6 +181,7 @@ public class ShapesCreationWizard extends Wizard implements INewWizard {
 		 * 
 		 * @see org.eclipse.ui.dialogs.WizardNewFileCreationPage#validatePage()
 		 */
+		@Override
 		protected boolean validatePage() {
 			return super.validatePage() && validateFilename();
 		}

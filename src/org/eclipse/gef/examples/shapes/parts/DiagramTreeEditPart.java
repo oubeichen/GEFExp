@@ -50,6 +50,7 @@ class DiagramTreeEditPart extends AbstractTreeEditPart implements
 	 * Upon activation, attach to the model element as a property change
 	 * listener.
 	 */
+	@Override
 	public void activate() {
 		if (!isActive()) {
 			super.activate();
@@ -64,6 +65,7 @@ class DiagramTreeEditPart extends AbstractTreeEditPart implements
 	 * org.eclipse.gef.examples.shapes.parts.ShapeTreeEditPart#createEditPolicies
 	 * ()
 	 */
+	@Override
 	protected void createEditPolicies() {
 		// If this editpart is the root content of the viewer, then disallow
 		// removal
@@ -77,6 +79,7 @@ class DiagramTreeEditPart extends AbstractTreeEditPart implements
 	 * Upon deactivation, detach from the model element as a property change
 	 * listener.
 	 */
+	@Override
 	public void deactivate() {
 		if (isActive()) {
 			super.deactivate();
@@ -105,6 +108,7 @@ class DiagramTreeEditPart extends AbstractTreeEditPart implements
 	 * 
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#getModelChildren()
 	 */
+	@Override
 	protected List getModelChildren() {
 		return getCastedModel().getChildren(); // a list of shapes
 	}
@@ -115,6 +119,7 @@ class DiagramTreeEditPart extends AbstractTreeEditPart implements
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.
 	 * PropertyChangeEvent)
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String prop = evt.getPropertyName();
 		if (ShapesDiagram.CHILD_ADDED_PROP.equals(prop)) {

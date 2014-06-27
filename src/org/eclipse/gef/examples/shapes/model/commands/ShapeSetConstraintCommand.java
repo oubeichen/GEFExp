@@ -62,6 +62,7 @@ public class ShapeSetConstraintCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#canExecute()
 	 */
+	@Override
 	public boolean canExecute() {
 		Object type = request.getType();
 		// make sure the Request is of a type we support:
@@ -76,6 +77,7 @@ public class ShapeSetConstraintCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#execute()
 	 */
+	@Override
 	public void execute() {
 		oldBounds = new Rectangle(shape.getLocation(), shape.getSize());
 		redo();
@@ -86,6 +88,7 @@ public class ShapeSetConstraintCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#redo()
 	 */
+	@Override
 	public void redo() {
 		shape.setSize(newBounds.getSize());
 		shape.setLocation(newBounds.getLocation());
@@ -96,6 +99,7 @@ public class ShapeSetConstraintCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#undo()
 	 */
+	@Override
 	public void undo() {
 		shape.setSize(oldBounds.getSize());
 		shape.setLocation(oldBounds.getLocation());

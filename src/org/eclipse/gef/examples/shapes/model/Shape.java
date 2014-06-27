@@ -98,6 +98,7 @@ public abstract class Shape extends ModelElement {
 		for (int i = 0; i < descriptors.length; i++) {
 			((PropertyDescriptor) descriptors[i])
 					.setValidator(new ICellEditorValidator() {
+						@Override
 						public String isValid(Object value) {
 							int intValue = -1;
 							try {
@@ -180,6 +181,7 @@ public abstract class Shape extends ModelElement {
 	 * @see #getPropertyValue(Object)
 	 * @see #setPropertyValue(Object, Object)
 	 */
+	@Override
 	public IPropertyDescriptor[] getPropertyDescriptors() {
 		return descriptors;
 	}
@@ -194,6 +196,7 @@ public abstract class Shape extends ModelElement {
 	 * @see #descriptors
 	 * @see #getPropertyDescriptors()
 	 */
+	@Override
 	public Object getPropertyValue(Object propertyId) {
 		if (XPOS_PROP.equals(propertyId)) {
 			return Integer.toString(location.x);
@@ -281,6 +284,7 @@ public abstract class Shape extends ModelElement {
 	 * @see #descriptors
 	 * @see #getPropertyDescriptors()
 	 */
+	@Override
 	public void setPropertyValue(Object propertyId, Object value) {
 		if (XPOS_PROP.equals(propertyId)) {
 			int x = Integer.parseInt((String) value);

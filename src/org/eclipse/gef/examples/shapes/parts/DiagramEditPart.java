@@ -62,6 +62,7 @@ class DiagramEditPart extends AbstractGraphicalEditPart implements
 	 * Upon activation, attach to the model element as a property change
 	 * listener.
 	 */
+	@Override
 	public void activate() {
 		if (!isActive()) {
 			super.activate();
@@ -74,6 +75,7 @@ class DiagramEditPart extends AbstractGraphicalEditPart implements
 	 * 
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
 	 */
+	@Override
 	protected void createEditPolicies() {
 		// disallows the removal of this edit part from its parent
 		installEditPolicy(EditPolicy.COMPONENT_ROLE,
@@ -90,6 +92,7 @@ class DiagramEditPart extends AbstractGraphicalEditPart implements
 	 * 
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
 	 */
+	@Override
 	protected IFigure createFigure() {
 		Figure f = new FreeformLayer();
 		f.setBorder(new MarginBorder(3));
@@ -106,6 +109,7 @@ class DiagramEditPart extends AbstractGraphicalEditPart implements
 	 * Upon deactivation, detach from the model element as a property change
 	 * listener.
 	 */
+	@Override
 	public void deactivate() {
 		if (isActive()) {
 			super.deactivate();
@@ -122,6 +126,7 @@ class DiagramEditPart extends AbstractGraphicalEditPart implements
 	 * 
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#getModelChildren()
 	 */
+	@Override
 	protected List getModelChildren() {
 		return getCastedModel().getChildren(); // return a list of shapes
 	}
@@ -132,6 +137,7 @@ class DiagramEditPart extends AbstractGraphicalEditPart implements
 	 * @see
 	 * java.beans.PropertyChangeListener#propertyChange(PropertyChangeEvent)
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String prop = evt.getPropertyName();
 		// these properties are fired when Shapes are added into or removed from
@@ -157,6 +163,7 @@ class DiagramEditPart extends AbstractGraphicalEditPart implements
 		 * @see ConstrainedLayoutEditPolicy#createChangeConstraintCommand(
 		 * ChangeBoundsRequest, EditPart, Object)
 		 */
+		@Override
 		protected Command createChangeConstraintCommand(
 				ChangeBoundsRequest request, EditPart child, Object constraint) {
 			if (child instanceof ShapeEditPart
@@ -176,6 +183,7 @@ class DiagramEditPart extends AbstractGraphicalEditPart implements
 		 * ConstrainedLayoutEditPolicy#createChangeConstraintCommand(EditPart,
 		 * Object)
 		 */
+		@Override
 		protected Command createChangeConstraintCommand(EditPart child,
 				Object constraint) {
 			// not used in this example
@@ -187,6 +195,7 @@ class DiagramEditPart extends AbstractGraphicalEditPart implements
 		 * 
 		 * @see LayoutEditPolicy#getCreateCommand(CreateRequest)
 		 */
+		@Override
 		protected Command getCreateCommand(CreateRequest request) {
 			Object childClass = request.getNewObjectType();
 			if (childClass == EllipticalShape.class

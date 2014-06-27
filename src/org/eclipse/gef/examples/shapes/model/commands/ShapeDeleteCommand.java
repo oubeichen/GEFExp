@@ -75,6 +75,7 @@ public class ShapeDeleteCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#canUndo()
 	 */
+	@Override
 	public boolean canUndo() {
 		return wasRemoved;
 	}
@@ -84,6 +85,7 @@ public class ShapeDeleteCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#execute()
 	 */
+	@Override
 	public void execute() {
 		// store a copy of incoming & outgoing connections before proceeding
 		sourceConnections = child.getSourceConnections();
@@ -96,6 +98,7 @@ public class ShapeDeleteCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#redo()
 	 */
+	@Override
 	public void redo() {
 		// remove the child and disconnect its connections
 		wasRemoved = parent.removeChild(child);
@@ -123,6 +126,7 @@ public class ShapeDeleteCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#undo()
 	 */
+	@Override
 	public void undo() {
 		// add the child and reconnect its connections
 		if (parent.addChild(child)) {

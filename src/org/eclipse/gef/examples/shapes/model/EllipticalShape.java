@@ -24,10 +24,12 @@ public class EllipticalShape extends Shape {
 
 	private static final long serialVersionUID = 1;
 
+	@Override
 	public Image getIcon() {
 		return ELLIPSE_ICON;
 	}
 
+	@Override
 	public String toString() {
 		return "Ellipse " + hashCode();
 	}
