@@ -75,7 +75,7 @@ public class ShapesCreationWizard extends Wizard implements INewWizard {
 	 * This WizardPage can create an empty .shapes file for the ShapesEditor.
 	 */
 	private class CreationPage extends WizardNewFileCreationPage {
-		private static final String DEFAULT_EXTENSION = ".shapes";
+		private static final String DEFAULT_EXTENSION = ".obsp";
 		private final IWorkbench workbench;
 
 		/**

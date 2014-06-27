@@ -3,20 +3,20 @@
 <plugin>
 
      <extension point="org.eclipse.ui.editors">
-      <editor name="GEF Shapes Example"
-              extensions="shapes"
+      <editor name="Oubeichen's GEF Shapes"
+              extensions="obsp"
               icon="shapes.gif"
               default="true"
               class="org.eclipse.gef.examples.shapes.ShapesEditor"
               contributorClass="org.eclipse.gef.examples.shapes.ShapesEditorActionBarContributor"
-              id="GEF Shapes Editor">
+              id="Oubeichen GEF Shapes Editor">
       </editor>
    </extension>
    <extension point="org.eclipse.ui.newWizards">
       <category name="Examples"
                 parentCategory="org.eclipse.ui.Examples"
                 id="org.eclipse.gef.examples"/>
-      <wizard name="Shapes Diagram"
+      <wizard name="Oubeichen Shapes Diagram"
               icon="shapes.gif"
               category="org.eclipse.ui.Examples/org.eclipse.gef.examples"
               class="org.eclipse.gef.examples.shapes.ShapesCreationWizard"
