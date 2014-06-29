@@ -18,11 +18,12 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.EventObject;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -40,7 +41,6 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPartViewer;
@@ -58,7 +58,8 @@ import org.eclipse.gef.ui.parts.ContentOutlinePage;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.gef.ui.parts.TreeViewer;
-
+import org.eclipse.gef.examples.shapes.model.Connection;
+import org.eclipse.gef.examples.shapes.model.Shape;
 import org.eclipse.gef.examples.shapes.model.ShapesDiagram;
 import org.eclipse.gef.examples.shapes.parts.ShapesEditPartFactory;
 import org.eclipse.gef.examples.shapes.parts.ShapesTreeEditPartFactory;
@@ -127,6 +128,54 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 		ObjectOutputStream oos = new ObjectOutputStream(os);
 		oos.writeObject(getModel());
 		oos.close();
+	}
+
+	private void createRawOutput(ByteArrayOutputStream out) throws IOException
+	{
+		StringBuffer sb = new StringBuffer();
+		Iterator it = getModel().getChildren()
+				.iterator(), conit;
+		HashSet<Connection> hs = new HashSet<Connection>();
+		sb.append("Shapes:\n"
+				+ getModel().getChildren()
+						.size() + "\n");// 先输出shape个数
+		while (it.hasNext()) {
+			Shape sp = (Shape) it.next();
+			sb.append(sp.toString() + "\n");
+			sb.append("height:\n"
+					+ sp.getSize().height
+					+ "\nwidth:\n"
+					+ sp.getSize().width + "\n");
+			sb.append("location:\n"
+					+ sp.getLocation().x + " "
+					+ sp.getLocation().y + "\n");
+			conit = sp.getSourceConnections()
+					.iterator();
+			while (conit.hasNext()) {
+				hs.add((Connection) conit.next());
+			}
+			conit = sp.getTargetConnections()
+					.iterator();
+			while (conit.hasNext()) {
+				hs.add((Connection) conit.next());
+			}
+			sb.append("\n");// 每个图形之间间隔一行
+		}
+
+		sb.append("Connections:\n" + hs.size()
+				+ "\n");
+		it = hs.iterator();
+		while (it.hasNext()) {
+			Connection con = (Connection) it
+					.next();
+			sb.append(con.getSource()
+					.toString() + "\n");
+			sb.append(con.getTarget()
+					.toString() + "\n");
+			sb.append("\n");// 每个连接之间间隔一行
+		}
+		out.write(sb.toString().getBytes());
+		out.close();
 	}
 
 	/*
@@ -229,14 +278,20 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 						new WorkspaceModifyOperation() { // run this operation
 							@Override
 							public void execute(final IProgressMonitor monitor) {
+								ByteArrayOutputStream out = new ByteArrayOutputStream();
 								try {
-									ByteArrayOutputStream out = new ByteArrayOutputStream();
-									createOutputStream(out);
+									if (file.getFileExtension().equals("obraw")) {
+										createRawOutput(out);
+									} else {
+										createOutputStream(out);
+									}
 									file.create(
 											new ByteArrayInputStream(out
 													.toByteArray()), // contents
-											true, // keep saving, even if IFile
-													// is out of sync with the
+											true, // keep saving, even if
+													// IFile
+													// is out of sync with
+													// the
 													// Workspace
 											monitor); // progress monitor
 								} catch (CoreException ce) {
