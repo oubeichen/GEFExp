@@ -10,13 +10,16 @@
 ?*******************************************************************************/
 package org.eclipse.gef.examples.shapes;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,6 +32,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.ui.IActionBars;
@@ -59,8 +64,11 @@ import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.gef.examples.shapes.model.Connection;
+import org.eclipse.gef.examples.shapes.model.EllipticalShape;
+import org.eclipse.gef.examples.shapes.model.RectangularShape;
 import org.eclipse.gef.examples.shapes.model.Shape;
 import org.eclipse.gef.examples.shapes.model.ShapesDiagram;
+import org.eclipse.gef.examples.shapes.model.TriangularShape;
 import org.eclipse.gef.examples.shapes.parts.ShapesEditPartFactory;
 import org.eclipse.gef.examples.shapes.parts.ShapesTreeEditPartFactory;
 
@@ -230,8 +238,12 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 	public void doSave(IProgressMonitor monitor) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
-			createOutputStream(out);
 			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
+			if(file.getName().contains(".data.obsp")){
+				createOutputStream(out);
+			}else{
+				createRawOutput(out);
+			}
 			file.setContents(new ByteArrayInputStream(out.toByteArray()), true, // keep
 																				// saving,
 																				// even
@@ -280,10 +292,10 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 							public void execute(final IProgressMonitor monitor) {
 								ByteArrayOutputStream out = new ByteArrayOutputStream();
 								try {
-									if (file.getFileExtension().equals("obraw")) {
-										createRawOutput(out);
-									} else {
+									if (file.getName().contains(".data.obsp")) {
 										createOutputStream(out);
+									} else {
+										createRawOutput(out);
 									}
 									file.create(
 											new ByteArrayInputStream(out
@@ -379,16 +391,109 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 		super.setInput(input);
 		try {
 			IFile file = ((IFileEditorInput) input).getFile();
+		if(file.getName().contains(".data.obsp")){//XXX.data.obsp
 			ObjectInputStream in = new ObjectInputStream(file.getContents());
 			diagram = (ShapesDiagram) in.readObject();
 			in.close();
+		}else{
+			diagram = new ShapesDiagram();
+			
+            InputStreamReader isr = new InputStreamReader(file.getContents());
+            BufferedReader reader = new BufferedReader(isr);
+            String tempString, name;
+            ArrayList<String> shapename = new ArrayList<String>();
+            int shapenum, connnum;
+            reader.readLine();//"Shape:"
+            tempString = reader.readLine();//shape number
+            try{
+            	shapenum = Integer.parseInt(tempString);
+            }catch(NumberFormatException ex){
+            	shapenum = 0;
+            }
+            for(int i = 0;i < shapenum;i++){
+            	int height, width, x, y;
+                name = reader.readLine();//shape name
+                shapename.add(name);
+                reader.readLine();//"height:"
+                tempString = reader.readLine();//shape height
+                try{
+                	height = Integer.parseInt(tempString);
+                }catch(NumberFormatException ex){
+                	height = 0;
+                }
+                reader.readLine();//"width:"
+                tempString = reader.readLine();//shape width
+                try{
+                	width = Integer.parseInt(tempString);
+                }catch(NumberFormatException ex){
+                	width = 0;
+                }
+                reader.readLine();//"location:"
+                tempString = reader.readLine();//shape location
+                try{
+                	x = Integer.parseInt(tempString.split(" ")[0]);
+                }catch(NumberFormatException ex){
+                	x = 0;
+                }
+                try{
+                	y = Integer.parseInt(tempString.split(" ")[1]);
+                }catch(NumberFormatException ex){
+                	y = 0;
+                }
+                reader.readLine();//empty line
+                //add to the diagram
+                Shape sp;
+                if(name.contains("Ellipse")){
+                	sp = new EllipticalShape();
+                }else if(name.contains("Triangle")){
+                	sp = new TriangularShape();
+                }else if(name.contains("Rectangle")){
+                	sp = new RectangularShape();
+                }else{
+                	System.err.println("Shape unsupported!");
+                	sp = new EllipticalShape();
+                }
+                sp.setSize(new Dimension(width, height));
+                sp.setLocation(new Point(x, y));
+                diagram.addChild(sp);
+            }
+
+            reader.readLine();//"Connections:"
+            tempString = reader.readLine();//connection num
+            try{
+            	connnum = Integer.parseInt(tempString);
+            }catch(NumberFormatException ex){
+            	connnum = 0;
+            }
+            
+            for(int i = 0;i < connnum;i++)
+            {
+            	String source = reader.readLine();
+            	String target = reader.readLine();
+            	reader.readLine();//empty line
+            	int sourceindex = shapename.indexOf(source);
+            	int targetindex = shapename.indexOf(target);
+            	if(sourceindex == -1 || targetindex == -1)
+            	{
+            		System.err.println("Cannot find this shape!");
+            		continue;
+            	}
+            	Shape sourceshape = (Shape) diagram.getChildren().get(sourceindex);
+            	Shape targetshape = (Shape) diagram.getChildren().get(targetindex);
+            	Connection conn = new Connection(sourceshape, targetshape);
+            }
+            
+            reader.close();
+		}
 			setPartName(file.getName());
-		} catch (IOException e) {
-			handleLoadException(e);
 		} catch (CoreException e) {
 			handleLoadException(e);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			handleLoadException(e);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
