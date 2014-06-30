@@ -328,10 +328,6 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 				getCastedModel().getSize());
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this,
 				getFigure(), bounds);
-		if(getFigure() instanceof Triangle){//三角形特别设定，暂时放在这
-			Triangle tri = (Triangle)getFigure();
-
-		}
 		if (((Shape) getModel()).getColor() == 0) {
 			getFigure().setBackgroundColor(ColorConstants.red);
 		} else {
