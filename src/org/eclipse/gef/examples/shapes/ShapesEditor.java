@@ -239,7 +239,7 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
 			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
-			if(file.getName().contains(".data.obsp")){
+			if(!file.getName().contains(".raw.obsp")){
 				createOutputStream(out);
 			}else{
 				createRawOutput(out);
@@ -292,7 +292,7 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 							public void execute(final IProgressMonitor monitor) {
 								ByteArrayOutputStream out = new ByteArrayOutputStream();
 								try {
-									if (file.getName().contains(".data.obsp")) {
+									if (!file.getName().contains(".raw.obsp")) {
 										createOutputStream(out);
 									} else {
 										createRawOutput(out);
@@ -391,7 +391,7 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 		super.setInput(input);
 		try {
 			IFile file = ((IFileEditorInput) input).getFile();
-		if(file.getName().contains(".data.obsp")){//XXX.data.obsp
+		if(!file.getName().contains(".raw.obsp")){//XXX.raw.obsp
 			ObjectInputStream in = new ObjectInputStream(file.getContents());
 			diagram = (ShapesDiagram) in.readObject();
 			in.close();
