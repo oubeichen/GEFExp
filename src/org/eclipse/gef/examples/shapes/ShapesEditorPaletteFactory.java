@@ -24,6 +24,7 @@ import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.requests.SimpleFactory;
 import org.eclipse.gef.examples.shapes.model.Connection;
 import org.eclipse.gef.examples.shapes.model.EllipticalShape;
+import org.eclipse.gef.examples.shapes.model.Line;
 import org.eclipse.gef.examples.shapes.model.RectangularShape;
 import org.eclipse.gef.examples.shapes.model.TriangularShape;
 
@@ -63,6 +64,15 @@ final class ShapesEditorPaletteFactory {
 						"icons/triangle16.gif"),
 				ImageDescriptor.createFromFile(ShapesPlugin.class,
 						"icons/triangle24.gif"));
+		componentsDrawer.add(component);
+		
+		component = new CombinedTemplateCreationEntry("Line",
+				"Create a line", Line.class,
+				new SimpleFactory(Line.class),
+				ImageDescriptor.createFromFile(ShapesPlugin.class,
+						"icons/line16.gif"),
+				ImageDescriptor.createFromFile(ShapesPlugin.class,
+						"icons/line24.gif"));
 		componentsDrawer.add(component);
 
 		return componentsDrawer;

@@ -187,7 +187,7 @@ class ShapeEditPart extends AbstractGraphicalEditPart implements
 			return new RectangleFigure();
 		} else if(getModel() instanceof TriangularShape){
 			return new Triangle();
-		}else {
+	    } else {
 			// if Shapes gets extended the conditions above must be updated
 			throw new IllegalArgumentException();
 		}

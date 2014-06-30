@@ -14,6 +14,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
+import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
@@ -21,22 +22,31 @@ import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ShortestPathConnectionRouter;
+import org.eclipse.draw2d.XYAnchor;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.LayerConstants;
+import org.eclipse.gef.NodeEditPart;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.gef.requests.ReconnectRequest;
 import org.eclipse.gef.examples.shapes.model.EllipticalShape;
+import org.eclipse.gef.examples.shapes.model.Line;
 import org.eclipse.gef.examples.shapes.model.ModelElement;
 import org.eclipse.gef.examples.shapes.model.RectangularShape;
 import org.eclipse.gef.examples.shapes.model.Shape;
 import org.eclipse.gef.examples.shapes.model.ShapesDiagram;
 import org.eclipse.gef.examples.shapes.model.TriangularShape;
+import org.eclipse.gef.examples.shapes.model.commands.LineCreateCommand;
 import org.eclipse.gef.examples.shapes.model.commands.ShapeCreateCommand;
 import org.eclipse.gef.examples.shapes.model.commands.ShapeSetConstraintCommand;
 
@@ -56,7 +66,11 @@ import org.eclipse.gef.examples.shapes.model.commands.ShapeSetConstraintCommand;
  * @author Elias Volanakis
  */
 class DiagramEditPart extends AbstractGraphicalEditPart implements
-		PropertyChangeListener {
+		PropertyChangeListener, NodeEditPart {
+
+	private XYAnchor sourceAnchor = null;
+	
+	private XYAnchor targetAnchor = null;
 
 	/**
 	 * Upon activation, attach to the model element as a property change
@@ -85,6 +99,54 @@ class DiagramEditPart extends AbstractGraphicalEditPart implements
 		// and creation of new model elements
 		installEditPolicy(EditPolicy.LAYOUT_ROLE,
 				new ShapesXYLayoutEditPolicy());
+        installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE,
+        	new GraphicalNodeEditPolicy() {
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see
+			 * org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy#
+			 * getConnectionCompleteCommand
+			 * (org.eclipse.gef.requests.CreateConnectionRequest)
+			 */
+			@Override
+			protected Command getConnectionCompleteCommand(
+					CreateConnectionRequest request) {
+				LineCreateCommand cmd = (LineCreateCommand) request
+						.getStartCommand();
+				cmd.setParent((ShapesDiagram) getHost().getModel());
+				return cmd;
+			}
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see
+			 * org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy#
+			 * getConnectionCreateCommand
+			 * (org.eclipse.gef.requests.CreateConnectionRequest)
+			 */
+			@Override
+			protected Command getConnectionCreateCommand(
+					CreateConnectionRequest request) {
+				LineCreateCommand cmd = new LineCreateCommand((ShapesDiagram) getHost().getModel());
+				request.setStartCommand(cmd);
+				return cmd;
+			}
+
+			@Override
+			protected Command getReconnectTargetCommand(ReconnectRequest request) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			protected Command getReconnectSourceCommand(ReconnectRequest request) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+		});
 	}
 
 	/*
@@ -147,6 +209,11 @@ class DiagramEditPart extends AbstractGraphicalEditPart implements
 				|| ShapesDiagram.CHILD_REMOVED_PROP.equals(prop)) {
 			refreshChildren();
 		}
+		if (ShapesDiagram.LINE_ADDED_PROP.equals(prop)
+				|| ShapesDiagram.LINE_REMOVED_PROP.equals(prop)){
+            refreshTargetConnections();
+            refreshSourceConnections();
+		}
 	}
 
 	/**
@@ -206,9 +273,51 @@ class DiagramEditPart extends AbstractGraphicalEditPart implements
 						(ShapesDiagram) getHost().getModel(),
 						(Rectangle) getConstraintFor(request));
 			}
+			if (childClass == Line.class){
+				return new LineCreateCommand((ShapesDiagram)getHost().getModel());
+			}
 			return null;
 		}
 
 	}
 
+	@Override
+	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart arg0) {
+		return sourceAnchor;
+	}
+	
+	@Override
+	public ConnectionAnchor getSourceConnectionAnchor(Request req) {
+		if(req instanceof CreateConnectionRequest)
+			sourceAnchor = new XYAnchor(((CreateConnectionRequest) req).getLocation());
+		else if(req instanceof ReconnectRequest)
+			sourceAnchor = new XYAnchor(((ReconnectRequest) req).getLocation());
+		return sourceAnchor;
+	}
+
+	@Override
+	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart arg0) {
+		// TODO Auto-generated method stub
+		return targetAnchor;
+	}
+
+	@Override
+	public ConnectionAnchor getTargetConnectionAnchor(Request req) {
+		// TODO Auto-generated method stub
+		if(req instanceof CreateConnectionRequest)
+			targetAnchor = new XYAnchor(((CreateConnectionRequest) req).getLocation());
+		else if(req instanceof ReconnectRequest)
+			targetAnchor = new XYAnchor(((ReconnectRequest) req).getLocation());
+		return targetAnchor;
+	}
+
+	@Override
+	protected List getModelSourceConnections(){
+		return ((ShapesDiagram) this.getModel()).getLines();
+	}
+	
+	@Override
+	protected List getModelTargetConnections(){
+		return ((ShapesDiagram) this.getModel()).getLines();
+	}
 }

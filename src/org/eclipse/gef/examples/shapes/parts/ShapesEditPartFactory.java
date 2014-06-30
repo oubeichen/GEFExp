@@ -12,8 +12,8 @@ package org.eclipse.gef.examples.shapes.parts;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
-
 import org.eclipse.gef.examples.shapes.model.Connection;
+import org.eclipse.gef.examples.shapes.model.Line;
 import org.eclipse.gef.examples.shapes.model.Shape;
 import org.eclipse.gef.examples.shapes.model.ShapesDiagram;
 
@@ -52,6 +52,9 @@ public class ShapesEditPartFactory implements EditPartFactory {
 		}
 		if (modelElement instanceof Shape) {
 			return new ShapeEditPart();
+		}
+		if (modelElement instanceof Line) {
+			return new LineEditPart();
 		}
 		if (modelElement instanceof Connection) {
 			return new ConnectionEditPart();
