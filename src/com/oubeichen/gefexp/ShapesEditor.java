@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -73,6 +74,14 @@ import com.oubeichen.gefexp.model.TriangularShape;
 import com.oubeichen.gefexp.parts.ShapesEditPartFactory;
 import com.oubeichen.gefexp.parts.ShapesTreeEditPartFactory;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
+
 /**
  * A graphical editor with flyout palette that can edit .shapes files. The
  * binding between the .shapes file extension and this editor is done in
@@ -119,7 +128,7 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 		viewer.setContextMenu(cmProvider);
 		getSite().registerContextMenu(cmProvider, viewer);
 	}
-
+ 
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -141,7 +150,7 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 
 	private void createRawOutput(ByteArrayOutputStream out) throws IOException
 	{
-		StringBuffer sb = new StringBuffer();
+		/*StringBuffer sb = new StringBuffer();
 		Iterator it = getModel().getChildren()
 				.iterator(), conit;
 		HashSet<Connection> hs = new HashSet<Connection>();
@@ -183,7 +192,52 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 					.toString() + "\n");
 			sb.append("\n");// 每个连接之间间隔一行
 		}
-		out.write(sb.toString().getBytes());
+		out.write(sb.toString().getBytes());*/
+		
+        Document document = DocumentHelper.createDocument();
+        Element root = document.addElement("diagram");// 创建根节点
+        Element shaperoot = root.addElement("shapes");
+        Iterator it = getModel().getChildren().iterator(), conit;
+        HashSet<Connection> hs = new HashSet<Connection>();
+        while (it.hasNext()) {//写入所有shape
+            Shape sp = (Shape)it.next();
+            Element shapeElm = shaperoot.addElement("shape");
+            shapeElm.addElement("name").addText(sp.toString());
+            shapeElm.addElement("height").addText(String.valueOf(sp.getSize().height));
+            shapeElm.addElement("width").addText(String.valueOf(sp.getSize().width));
+            shapeElm.addElement("locx").addText(String.valueOf(sp.getLocation().x));
+            shapeElm.addElement("locy").addText(String.valueOf(sp.getLocation().y));
+			conit = sp.getSourceConnections()
+					.iterator();
+			while (conit.hasNext()) {
+				hs.add((Connection) conit.next());
+			}
+			conit = sp.getTargetConnections()
+					.iterator();
+			while (conit.hasNext()) {
+				hs.add((Connection) conit.next());
+			}
+        }
+        Element connroot = root.addElement("connections");
+		it = hs.iterator();
+		while (it.hasNext()) {
+			Element connElm = connroot.addElement("connection");
+			Connection con = (Connection) it
+					.next();
+			connElm.addElement("source").addText(con.getSource().toString());
+			connElm.addElement("target").addText(con.getTarget().toString());
+		}
+        OutputFormat format = OutputFormat.createPrettyPrint();
+        format.setEncoding("UTF-8");    // 指定XML编码        
+        XMLWriter writer;
+        try {
+            writer = new XMLWriter(out, format);
+            writer.write(document);
+            writer.close();
+        } catch (IOException ex) {
+        	System.err.println("Cannot create output file!");
+            ex.printStackTrace();
+        }
 		out.close();
 	}
 
@@ -353,7 +407,7 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 
 	private void handleLoadException(Exception e) {
 		System.err.println("** Load failed. Using default model. **");
-		e.printStackTrace();
+		//e.printStackTrace();
 		diagram = new ShapesDiagram();
 	}
 
@@ -399,7 +453,7 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 		}else{
 			diagram = new ShapesDiagram();
 			
-            InputStreamReader isr = new InputStreamReader(file.getContents());
+            /*InputStreamReader isr = new InputStreamReader(file.getContents());
             BufferedReader reader = new BufferedReader(isr);
             String tempString, name;
             ArrayList<String> shapename = new ArrayList<String>();
@@ -484,7 +538,69 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
             	Connection conn = new Connection(sourceshape, targetshape);
             }
             
-            reader.close();
+            reader.close();*/
+			
+	        SAXReader reader = new SAXReader();
+	        Document document;
+	        try {
+	            reader.setEncoding("UTF-8");
+	            document = reader.read(file.getContents());//读文件
+	        } catch (DocumentException ex) {
+	        	System.err.println("Cannot read input file!");
+	        	ex.printStackTrace();
+	        	throw new CoreException(null);
+	        }
+	        Element root = document.getRootElement();
+	        Element shaperoot = root.element("shapes");
+	        List list = shaperoot.elements("shape");
+	        Iterator it = list.iterator();
+	        ArrayList<String> shapename = new ArrayList<String>();
+	        while(it.hasNext()){
+	        	Element shapeElm = (Element)it.next();
+	        	int height, width, x, y;
+	        	String name = shapeElm.elementText("name");
+	        	try{
+	        		height = Integer.parseInt(shapeElm.elementText("height"));
+	        		width = Integer.parseInt(shapeElm.elementText("width"));
+	        		x = Integer.parseInt(shapeElm.elementText("locx"));
+	        		y = Integer.parseInt(shapeElm.elementText("locy"));
+	                Shape sp;
+	                if(name.contains("Ellipse")){
+	                	sp = new EllipticalShape();
+	                }else if(name.contains("Triangle")){
+	                	sp = new TriangularShape();
+	                }else if(name.contains("Rectangle")){
+	                	sp = new RectangularShape();
+	                }else{
+	                	System.err.println("Shape unsupported!");
+	                	sp = new EllipticalShape();
+	                }
+	                diagram.addChild(sp);
+	                sp.setSize(new Dimension(width, height));
+	                sp.setLocation(new Point(x, y));
+	                shapename.add(name);
+	        	}catch (Exception ex){
+	        		ex.printStackTrace();
+	        	}
+	        }
+	        Element connroot = root.element("connections");
+	        list = connroot.elements("connection");
+	        it = list.iterator();
+	        while(it.hasNext()){
+	        	Element connElm = (Element)it.next();
+            	String source = connElm.elementText("source");
+            	String target = connElm.elementText("target");
+            	int sourceindex = shapename.indexOf(source);
+            	int targetindex = shapename.indexOf(target);
+            	if(sourceindex == -1 || targetindex == -1)
+            	{
+            		System.err.println("Cannot find this shape!");
+            		continue;
+            	}
+            	Shape sourceshape = (Shape) diagram.getChildren().get(sourceindex);
+            	Shape targetshape = (Shape) diagram.getChildren().get(targetindex);
+            	new Connection(sourceshape, targetshape);
+	        }
 		}
 			setPartName(file.getName());
 		} catch (CoreException e) {
