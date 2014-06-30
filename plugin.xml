@@ -19,7 +19,7 @@
       <wizard name="Oubeichen Shapes Diagram"
               icon="shapes.gif"
               category="org.eclipse.ui.Examples/com.oubeichen.gefexp"
-              class="com.oubeichen.gefexp.shapes.ShapesCreationWizard"
+              class="com.oubeichen.gefexp.ShapesCreationWizard"
               id="com.oubeichen.gefexp.ShapesCreationWizard">
          <selection class="org.eclipse.core.resources.IResource"/>
       </wizard>
